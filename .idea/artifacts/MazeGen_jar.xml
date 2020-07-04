@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="MazeGen:jar">
+    <output-path>$PROJECT_DIR$/../.others/mcserver_1.15.2/plugins</output-path>
+    <root id="archive" name="MazeGen.jar">
+      <element id="module-output" name="MazeGen" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+    </root>
+  </artifact>
+</component>
