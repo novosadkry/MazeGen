@@ -18,7 +18,6 @@ public class MazeGenerator {
         for (int y = 0; y < cells.length; y++) {
             for (int x = 0; x < cells[y].length; x++) {
                 cells[y][x] = new Cell(1, 1);
-                cells[y][x].setWall(x % 2 != 0 || y % 2 != 0);
             }
         }
 
@@ -37,17 +36,23 @@ public class MazeGenerator {
 
             int random = ThreadLocalRandom.current().nextInt(0, unvisited.length);
             CellPos selected = unvisited[random];
-            CellPos wall = pos.subtract(selected);
+            CellPos diff = pos.subtract(selected);
 
-            if (wall.getX() < 0)
-                cells[selected.getY()][selected.getX() - 1].setWall(false);
-            else if (wall.getX() > 0)
-                cells[selected.getY()][selected.getX() + 1].setWall(false);
+            if (diff.getX() < 0) {
+                cells[pos.getY()][pos.getX()].east = false;
+                cells[selected.getY()][selected.getX()].west = false;
+            } else {
+                cells[pos.getY()][pos.getX()].west = false;
+                cells[selected.getY()][selected.getX()].east = false;
+            }
 
-            if (wall.getY() < 0)
-                cells[selected.getY() - 1][selected.getX()].setWall(false);
-            else if (wall.getY() > 0)
-                cells[selected.getY() + 1][selected.getX()].setWall(false);
+            if (diff.getY() < 0) {
+                cells[pos.getY()][pos.getX()].south = false;
+                cells[selected.getY()][selected.getX()].north = false;
+            } else {
+                cells[pos.getY()][pos.getX()].north = false;
+                cells[selected.getY()][selected.getX()].south = false;
+            }
 
             generate(selected);
         }
@@ -58,14 +63,14 @@ public class MazeGenerator {
 
         int x = pos.getX(); int y = pos.getY();
 
-        if ((x - 2) > -1 && !cells[y][x - 2].isVisited())
-            unvisited.add(new CellPos(x - 2, y));
-        if ((x + 2) < cells[y].length && !cells[y][x + 2].isVisited())
-            unvisited.add(new CellPos(x + 2, y));
-        if ((y - 2) > -1 && !cells[y - 2][x].isVisited())
-            unvisited.add(new CellPos(x, y - 2));
-        if ((y + 2) < cells.length && !cells[y + 2][x].isVisited())
-            unvisited.add(new CellPos(x, y + 2));
+        if ((x - 1) > -1 && !cells[y][x - 1].isVisited())
+            unvisited.add(new CellPos(x - 1, y));
+        if ((x + 1) < cells[y].length && !cells[y][x + 1].isVisited())
+            unvisited.add(new CellPos(x + 1, y));
+        if ((y - 1) > -1 && !cells[y - 1][x].isVisited())
+            unvisited.add(new CellPos(x, y - 1));
+        if ((y + 1) < cells.length && !cells[y + 1][x].isVisited())
+            unvisited.add(new CellPos(x, y + 1));
 
         return unvisited.toArray(new CellPos[0]);
     }

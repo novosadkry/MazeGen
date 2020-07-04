@@ -17,7 +17,7 @@ public class Maze {
         this.height = height;
         this.depth = depth;
 
-        gen = new MazeGenerator(width, height);
+        gen = new MazeGenerator((width / 2) - 1, (height / 2) - 1);
     }
 
     public void generate(Location loc) {
@@ -28,14 +28,36 @@ public class Maze {
     }
 
     private void spawnMaze(Cell[][] cells, Location loc) {
-        for (int y = 0; y < cells.length; y++) {
-            for (int x = 0; x < cells[y].length; x++) {
-                if (cells[y][x].isWall()) {
-                    for (int z = 0; z < depth; z++) {
-                        Location _loc = new Location(loc.getWorld(), loc.getX() + y, loc.getY() + z, loc.getZ() + x);
-                        _loc.getBlock().setType(Material.SMOOTH_STONE);
-                    }
-                }
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                Cell cell = cells[i][j];
+                spawnCell(cell, loc.clone().add((cell.getHeight() + 1) * i, 0, (cell.getWidth() + 1) * j));
+            }
+        }
+    }
+
+    private void spawnCell(Cell cell, Location loc) {
+        for (int z = 0; z < depth; z++) {
+            // TODO: Don't spawn individual walls
+
+            for (int x = 0; x < cell.getWidth() + 2; x++) {
+                Location _loc = loc.clone().add(0, z, x);
+                _loc.getBlock().setType(Material.SMOOTH_STONE);
+            }
+
+            for (int x = 0; x < cell.getWidth() + 2; x++) {
+                Location _loc = loc.clone().add(cell.getHeight() + 2, z, x);
+                _loc.getBlock().setType(Material.SMOOTH_STONE);
+            }
+
+            for (int y = 0; y < cell.getHeight() + 2; y++) {
+                Location _loc = loc.clone().add(y, z, 0);
+                _loc.getBlock().setType(Material.SMOOTH_STONE);
+            }
+
+            for (int y = 0; y < cell.getHeight() + 2; y++) {
+                Location _loc = loc.clone().add(y, z, cell.getWidth() + 2);
+                _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
         }
     }

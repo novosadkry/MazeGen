@@ -3,11 +3,24 @@ package cz.novosadkry.MazeGen.cell;
 public class Cell {
     int width, height;
     boolean visited;
-    boolean wall;
+
+    public boolean
+            north = true,
+            east = true,
+            south = true,
+            west = true;
 
     public Cell(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public boolean isVisited() {
@@ -16,13 +29,5 @@ public class Cell {
 
     public void setVisited(boolean visited) {
         this.visited = visited;
-    }
-
-    public boolean isWall() {
-        return wall;
-    }
-
-    public void setWall(boolean wall) {
-        this.wall = wall;
     }
 }
