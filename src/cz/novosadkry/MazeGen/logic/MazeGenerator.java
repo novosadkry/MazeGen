@@ -9,15 +9,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MazeGenerator {
     Cell[][] cells;
+    Cell cellSize;
 
-    public MazeGenerator(int width, int height) {
+    public MazeGenerator(int width, int height, Cell cellSize) {
         cells = new Cell[height][width];
+        this.cellSize = cellSize;
     }
 
     public Cell[][] generate() {
         for (int y = 0; y < cells.length; y++) {
             for (int x = 0; x < cells[y].length; x++) {
-                cells[y][x] = new Cell(1, 1);
+                cells[y][x] = new Cell(cellSize.getWidth(), cellSize.getHeight());
             }
         }
 

@@ -10,14 +10,19 @@ import java.util.concurrent.CompletableFuture;
 
 public class Maze {
     int width, height, depth;
+
     MazeGenerator gen;
 
     public Maze(int width, int height, int depth) {
+        this(width, height, depth, 1, 1);
+    }
+
+    public Maze(int width, int height, int depth, int cellX, int cellY) {
         this.width = width;
         this.height = height;
         this.depth = depth;
 
-        gen = new MazeGenerator((width / 2) - 1, (height / 2) - 1);
+        gen = new MazeGenerator((width / (1 + cellX)), (height / (1 + cellY)), new Cell(cellX, cellY));
     }
 
     public void generate(Location loc) {
@@ -46,7 +51,7 @@ public class Maze {
             }
 
             for (int x = 0; x < cell.getWidth() + 2; x++) {
-                Location _loc = loc.clone().add(cell.getHeight() + 2, z, x);
+                Location _loc = loc.clone().add(cell.getHeight() + 1, z, x);
                 _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
 
@@ -56,7 +61,7 @@ public class Maze {
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
-                Location _loc = loc.clone().add(y, z, cell.getWidth() + 2);
+                Location _loc = loc.clone().add(y, z, cell.getWidth() + 1);
                 _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
         }
