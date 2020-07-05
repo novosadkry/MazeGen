@@ -2,6 +2,7 @@ package cz.novosadkry.MazeGen;
 
 import cz.novosadkry.MazeGen.executors.MazeGenExecutor;
 import cz.novosadkry.MazeGen.maze.MazePersist;
+import cz.novosadkry.MazeGen.tabcompleters.MazeGenTabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +15,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         getCommand("mazegen").setExecutor(new MazeGenExecutor());
+        getCommand("mazegen").setTabCompleter(new MazeGenTabCompleter());
     }
 
     @Override

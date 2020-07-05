@@ -24,7 +24,7 @@ public class MazeGenExecutor implements CommandExecutor {
                 if (args[0].equals("spawn")) {
                     if (!persist.validate()) {
                         player.sendMessage("[MazeGen] Property unset! Use /mazegen set");
-                        return false;
+                        return true;
                     }
 
                     Maze maze = new Maze(
@@ -65,7 +65,7 @@ public class MazeGenExecutor implements CommandExecutor {
                     } catch (NumberFormatException ignored) { }
                 }
 
-                else if (args[0].equals("stop")) {
+                else if (args[0].equals("cancel")) {
                     persist.last.cancel();
                 }
             }
