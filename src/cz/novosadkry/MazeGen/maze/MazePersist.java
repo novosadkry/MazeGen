@@ -2,10 +2,9 @@ package cz.novosadkry.MazeGen.maze;
 
 import cz.novosadkry.MazeGen.cell.Cell;
 import org.bukkit.Material;
-import org.bukkit.scheduler.BukkitTask;
 
 public class MazePersist {
-    public BukkitTask last;
+    public Maze last;
     public long tick;
 
     public int width, height, depth;

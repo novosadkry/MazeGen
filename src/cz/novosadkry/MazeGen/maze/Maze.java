@@ -5,13 +5,14 @@ import cz.novosadkry.MazeGen.cell.Cell;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.scheduler.BukkitTask;
 
 public class Maze {
     int width, height, depth;
 
     Material mat;
     MazeGenerator gen;
+
+    boolean cancelled;
 
     public Maze(Material mat, int width, int height, int depth) {
         this(mat, width, height, depth, 1, 1);
@@ -29,31 +30,37 @@ public class Maze {
         gen = new MazeGenerator((width / (1 + cellX)), (height / (1 + cellY)), new Cell(cellX, cellY));
     }
 
-    public BukkitTask runSpawn(Location loc) {
-        return runSpawn(loc, 0);
+    public void runSpawn(Location loc) {
+        runSpawn(loc, 0);
     }
 
-    public BukkitTask runSpawn(Location loc, long tick) {
-        return Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(Main.class), () -> {
+    public void runSpawn(Location loc, long tick) {
+        cancelled = false;
+
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(Main.class), () -> {
             Cell[][] cells = gen.generate();
-            spawnMaze(cells, loc);
+
+            for (int i = 0; i < cells.length; i++) {
+                for (int j = 0; j < cells[i].length; j++) {
+                    Cell cell = cells[i][j];
+
+                    int y = (cell.getHeight() + 1) * i;
+                    int x = (cell.getWidth() + 1) * j;
+
+                    if (cancelled)
+                        return;
+
+                    try { Thread.sleep(tick); } catch (InterruptedException ignored) { }
+                    Bukkit.getScheduler().runTask(Main.getPlugin(Main.class), () ->
+                            spawnCell(cell, loc.clone().add(y, 0, x))
+                    );
+                }
+            }
         });
     }
 
-    private void spawnMaze(Cell[][] cells, Location loc) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[i].length; j++) {
-                Cell cell = cells[i][j];
-
-                int y = (cell.getHeight() + 1) * i;
-                int x = (cell.getWidth() + 1) * j;
-
-                try { Thread.sleep(30); } catch (InterruptedException ignored) { }
-                Bukkit.getScheduler().runTask(Main.getPlugin(Main.class), () ->
-                    spawnCell(cell, loc.clone().add(y, 0, x))
-                );
-            }
-        }
+    public void cancelSpawn() {
+        cancelled = true;
     }
 
     private void spawnCell(Cell cell, Location loc) {
