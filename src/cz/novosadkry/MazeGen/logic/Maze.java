@@ -11,24 +11,29 @@ import java.util.concurrent.CompletableFuture;
 public class Maze {
     int width, height, depth;
 
+    Material mat;
     MazeGenerator gen;
 
-    public Maze(int width, int height, int depth) {
-        this(width, height, depth, 1, 1);
+    public Maze(Material mat, int width, int height, int depth) {
+        this(mat, width, height, depth, 1, 1);
     }
 
-    public Maze(int width, int height, int depth, int cellX, int cellY) {
+    public Maze(Material mat, int width, int height, int depth, int cellX, int cellY) {
+        if (mat == null)
+            throw new NullPointerException();
+
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.mat = mat;
 
         gen = new MazeGenerator((width / (1 + cellX)), (height / (1 + cellY)), new Cell(cellX, cellY));
     }
 
-    public void generate(Location loc) {
+    public void spawn(Location loc) {
         CompletableFuture.runAsync(() -> {
             Cell[][] cells = gen.generate();
-            Bukkit.getScheduler().runTask(Main.getPlugin(Main.class), () -> spawnMaze(cells, loc));
+            spawnMaze(cells, loc);
         });
     }
 
@@ -36,7 +41,14 @@ public class Maze {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
-                spawnCell(cell, loc.clone().add((cell.getHeight() + 1) * i, 0, (cell.getWidth() + 1) * j));
+
+                int y = (cell.getHeight() + 1) * i;
+                int x = (cell.getWidth() + 1) * j;
+
+                try { Thread.sleep(30); } catch (InterruptedException ignored) { }
+                Bukkit.getScheduler().runTask(Main.getPlugin(Main.class), () ->
+                    spawnCell(cell, loc.clone().add(y, 0, x))
+                );
             }
         }
     }
@@ -48,7 +60,7 @@ public class Maze {
                     continue;
 
                 Location _loc = loc.clone().add(0, z, x);
-                _loc.getBlock().setType(Material.SMOOTH_STONE);
+                _loc.getBlock().setType(mat, false);
             }
 
             for (int x = 0; x < cell.getWidth() + 2; x++) {
@@ -56,7 +68,7 @@ public class Maze {
                     continue;
 
                 Location _loc = loc.clone().add(cell.getHeight() + 1, z, x);
-                _loc.getBlock().setType(Material.SMOOTH_STONE);
+                _loc.getBlock().setType(mat, false);
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
@@ -64,7 +76,7 @@ public class Maze {
                     continue;
 
                 Location _loc = loc.clone().add(y, z, 0);
-                _loc.getBlock().setType(Material.SMOOTH_STONE);
+                _loc.getBlock().setType(mat, false);
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
@@ -72,7 +84,7 @@ public class Maze {
                     continue;
 
                 Location _loc = loc.clone().add(y, z, cell.getWidth() + 1);
-                _loc.getBlock().setType(Material.SMOOTH_STONE);
+                _loc.getBlock().setType(mat, false);
             }
         }
     }
