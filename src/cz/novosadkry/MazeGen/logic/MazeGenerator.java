@@ -43,7 +43,7 @@ public class MazeGenerator {
             if (diff.getX() < 0) {
                 cells[pos.getY()][pos.getX()].east = false;
                 cells[selected.getY()][selected.getX()].west = false;
-            } else {
+            } else if (diff.getX() > 0) {
                 cells[pos.getY()][pos.getX()].west = false;
                 cells[selected.getY()][selected.getX()].east = false;
             }
@@ -51,7 +51,7 @@ public class MazeGenerator {
             if (diff.getY() < 0) {
                 cells[pos.getY()][pos.getX()].south = false;
                 cells[selected.getY()][selected.getX()].north = false;
-            } else {
+            } else if (diff.getY() > 0) {
                 cells[pos.getY()][pos.getX()].north = false;
                 cells[selected.getY()][selected.getX()].south = false;
             }

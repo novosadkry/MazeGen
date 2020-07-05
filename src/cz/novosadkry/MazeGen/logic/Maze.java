@@ -43,24 +43,34 @@ public class Maze {
 
     private void spawnCell(Cell cell, Location loc) {
         for (int z = 0; z < depth; z++) {
-            // TODO: Don't spawn individual walls
-
             for (int x = 0; x < cell.getWidth() + 2; x++) {
+                if (!cell.north && x > 0 && x < cell.getWidth() + 1)
+                    continue;
+
                 Location _loc = loc.clone().add(0, z, x);
                 _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
 
             for (int x = 0; x < cell.getWidth() + 2; x++) {
+                if (!cell.south && x > 0 && x < cell.getWidth() + 1)
+                    continue;
+
                 Location _loc = loc.clone().add(cell.getHeight() + 1, z, x);
                 _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
+                if (!cell.west && y > 0 && y < cell.getHeight() + 1)
+                    continue;
+
                 Location _loc = loc.clone().add(y, z, 0);
                 _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
+                if (!cell.east && y > 0 && y < cell.getHeight() + 1)
+                    continue;
+
                 Location _loc = loc.clone().add(y, z, cell.getWidth() + 1);
                 _loc.getBlock().setType(Material.SMOOTH_STONE);
             }
