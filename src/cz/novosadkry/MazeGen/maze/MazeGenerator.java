@@ -1,4 +1,4 @@
-package cz.novosadkry.MazeGen.logic;
+package cz.novosadkry.MazeGen.maze;
 
 import cz.novosadkry.MazeGen.cell.Cell;
 import cz.novosadkry.MazeGen.cell.CellPos;

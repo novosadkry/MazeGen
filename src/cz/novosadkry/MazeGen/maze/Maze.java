@@ -1,12 +1,11 @@
-package cz.novosadkry.MazeGen.logic;
+package cz.novosadkry.MazeGen.maze;
 
 import cz.novosadkry.MazeGen.Main;
 import cz.novosadkry.MazeGen.cell.Cell;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-
-import java.util.concurrent.CompletableFuture;
+import org.bukkit.scheduler.BukkitTask;
 
 public class Maze {
     int width, height, depth;
@@ -30,8 +29,12 @@ public class Maze {
         gen = new MazeGenerator((width / (1 + cellX)), (height / (1 + cellY)), new Cell(cellX, cellY));
     }
 
-    public void spawn(Location loc) {
-        CompletableFuture.runAsync(() -> {
+    public BukkitTask runSpawn(Location loc) {
+        return runSpawn(loc, 0);
+    }
+
+    public BukkitTask runSpawn(Location loc, long tick) {
+        return Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(Main.class), () -> {
             Cell[][] cells = gen.generate();
             spawnMaze(cells, loc);
         });
