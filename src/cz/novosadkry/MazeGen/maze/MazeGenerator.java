@@ -11,12 +11,14 @@ public class MazeGenerator {
     Cell[][] cells;
     Cell cellSize;
 
+    boolean generated;
+
     public MazeGenerator(int width, int height, Cell cellSize) {
         cells = new Cell[height][width];
         this.cellSize = cellSize;
     }
 
-    public Cell[][] generate() {
+    public void generate() {
         for (int y = 0; y < cells.length; y++) {
             for (int x = 0; x < cells[y].length; x++) {
                 cells[y][x] = new Cell(cellSize.getWidth(), cellSize.getHeight());
@@ -24,7 +26,7 @@ public class MazeGenerator {
         }
 
         generate(new CellPos(0, 0));
-        return cells;
+        generated = true;
     }
 
     private void generate(CellPos pos) {
@@ -75,5 +77,13 @@ public class MazeGenerator {
             unvisited.add(new CellPos(x, y + 1));
 
         return unvisited.toArray(new CellPos[0]);
+    }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    public boolean isGenerated() {
+        return generated;
     }
 }

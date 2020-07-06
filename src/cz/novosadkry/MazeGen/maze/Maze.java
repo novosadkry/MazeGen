@@ -8,11 +8,9 @@ import org.bukkit.Material;
 
 public class Maze {
     int width, height, depth;
-
     Material mat;
-    MazeGenerator gen;
 
-    boolean cancelled;
+    MazeGenerator gen;
 
     public Maze(Material mat, int width, int height, int depth) {
         this(mat, width, height, depth, 1, 1);
@@ -30,73 +28,15 @@ public class Maze {
         gen = new MazeGenerator((width / (1 + cellX)), (height / (1 + cellY)), new Cell(cellX, cellY));
     }
 
-    public void runSpawn(Location loc) {
-        runSpawn(loc, 0);
+    public MazeBuilder spawn(Location loc) {
+        return spawn(loc, 0);
     }
 
-    public void runSpawn(Location loc, long tick) {
-        cancelled = false;
+    public MazeBuilder spawn(Location loc, long tick) {
+        MazeBuilder builder = new MazeBuilder(loc, this, tick);
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(Main.class), builder);
 
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(Main.class), () -> {
-            Cell[][] cells = gen.generate();
-
-            for (int i = 0; i < cells.length; i++) {
-                for (int j = 0; j < cells[i].length; j++) {
-                    Cell cell = cells[i][j];
-
-                    int y = (cell.getHeight() + 1) * i;
-                    int x = (cell.getWidth() + 1) * j;
-
-                    if (cancelled)
-                        return;
-
-                    try { Thread.sleep(tick); } catch (InterruptedException ignored) { }
-                    Bukkit.getScheduler().runTask(Main.getPlugin(Main.class), () ->
-                            spawnCell(cell, loc.clone().add(y, 0, x))
-                    );
-                }
-            }
-        });
-    }
-
-    public void cancelSpawn() {
-        cancelled = true;
-    }
-
-    private void spawnCell(Cell cell, Location loc) {
-        for (int z = 0; z < depth; z++) {
-            for (int x = 0; x < cell.getWidth() + 2; x++) {
-                if (!cell.north && x > 0 && x < cell.getWidth() + 1)
-                    continue;
-
-                Location _loc = loc.clone().add(0, z, x);
-                _loc.getBlock().setType(mat, false);
-            }
-
-            for (int x = 0; x < cell.getWidth() + 2; x++) {
-                if (!cell.south && x > 0 && x < cell.getWidth() + 1)
-                    continue;
-
-                Location _loc = loc.clone().add(cell.getHeight() + 1, z, x);
-                _loc.getBlock().setType(mat, false);
-            }
-
-            for (int y = 0; y < cell.getHeight() + 2; y++) {
-                if (!cell.west && y > 0 && y < cell.getHeight() + 1)
-                    continue;
-
-                Location _loc = loc.clone().add(y, z, 0);
-                _loc.getBlock().setType(mat, false);
-            }
-
-            for (int y = 0; y < cell.getHeight() + 2; y++) {
-                if (!cell.east && y > 0 && y < cell.getHeight() + 1)
-                    continue;
-
-                Location _loc = loc.clone().add(y, z, cell.getWidth() + 1);
-                _loc.getBlock().setType(mat, false);
-            }
-        }
+        return builder;
     }
 
     public int getWidth() {
@@ -109,5 +49,9 @@ public class Maze {
 
     public int getDepth() {
         return depth;
+    }
+
+    public MazeGenerator getGenerator() {
+        return gen;
     }
 }

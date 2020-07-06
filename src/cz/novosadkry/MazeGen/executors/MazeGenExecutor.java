@@ -36,9 +36,7 @@ public class MazeGenExecutor implements CommandExecutor {
                             persist.cellSize.getHeight()
                     );
 
-                    maze.runSpawn(player.getLocation().clone().add(1, 0, 1), persist.tick);
-                    persist.last = maze;
-
+                    persist.last = maze.spawn(player.getLocation().clone().add(1, 0, 1), persist.tick);
                     player.sendMessage("[MazeGen] Generating... Please wait");
                 }
 
@@ -68,7 +66,8 @@ public class MazeGenExecutor implements CommandExecutor {
                 }
 
                 else if (args[0].equals("cancel")) {
-                    persist.last.cancelSpawn();
+                    if (persist.last != null)
+                        persist.last.cancel();
                 }
             }
         }

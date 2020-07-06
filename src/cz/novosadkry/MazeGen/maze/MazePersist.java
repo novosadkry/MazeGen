@@ -4,7 +4,7 @@ import cz.novosadkry.MazeGen.cell.Cell;
 import org.bukkit.Material;
 
 public class MazePersist {
-    public Maze last;
+    public MazeBuilder last;
     public long tick;
 
     public int width, height, depth;
