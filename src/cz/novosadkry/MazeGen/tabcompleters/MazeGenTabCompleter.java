@@ -10,29 +10,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MazeGenTabCompleter implements TabCompleter {
+    private List<String> defaultCMDs = Arrays.asList(
+            "spawn",
+            "set",
+            "cancel"
+    );
+
+    private List<String> setCMDs = Arrays.asList(
+            "material",
+            "width",
+            "height",
+            "depth",
+            "tick",
+            "cell"
+    );
+
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList(
-                    "spawn",
-                    "set",
-                    "cancel"
-            );
+            return defaultCMDs.stream()
+                    .filter(c -> c.startsWith(args[0]))
+                    .collect(Collectors.toList());
         }
 
-        if (args.length == 2 && args[0].equals("set")) {
-            return Arrays.asList(
-                    "material",
-                    "width",
-                    "height",
-                    "depth",
-                    "tick",
-                    "cell"
-            );
+        else if (args.length == 2 && args[0].equals("set")) {
+            return setCMDs.stream()
+                    .filter(c -> c.startsWith(args[1]))
+                    .collect(Collectors.toList());
         }
 
-        if (args.length == 3 && args[1].equals("material")) {
+        else if (args.length == 3 && args[1].equals("material")) {
             return Arrays.stream(Material.values())
                     .map(Material::toString)
+                    .filter(m -> m.startsWith(args[2].toUpperCase()))
                     .collect(Collectors.toList());
         }
 
