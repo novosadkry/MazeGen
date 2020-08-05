@@ -2,6 +2,7 @@ package cz.novosadkry.MazeGen.maze;
 
 import cz.novosadkry.MazeGen.Main;
 import cz.novosadkry.MazeGen.cell.Cell;
+import cz.novosadkry.MazeGen.nms.NMSWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -50,7 +51,14 @@ public class MazeBuilder implements Runnable {
                     continue;
 
                 Location _loc = loc.clone().add(0, z, x);
-                _loc.getBlock().setType(maze.mat, false);
+                NMSWorld.setBlockInNativeWorld(
+                        _loc.getWorld(),
+                        _loc.getBlockX(),
+                        _loc.getBlockY(),
+                        _loc.getBlockZ(),
+                        maze.mat,
+                        false
+                );
             }
 
             for (int x = 0; x < cell.getWidth() + 2; x++) {
@@ -58,7 +66,14 @@ public class MazeBuilder implements Runnable {
                     continue;
 
                 Location _loc = loc.clone().add(cell.getHeight() + 1, z, x);
-                _loc.getBlock().setType(maze.mat, false);
+                NMSWorld.setBlockInNativeWorld(
+                        _loc.getWorld(),
+                        _loc.getBlockX(),
+                        _loc.getBlockY(),
+                        _loc.getBlockZ(),
+                        maze.mat,
+                        false
+                );
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
@@ -66,7 +81,14 @@ public class MazeBuilder implements Runnable {
                     continue;
 
                 Location _loc = loc.clone().add(y, z, 0);
-                _loc.getBlock().setType(maze.mat, false);
+                NMSWorld.setBlockInNativeWorld(
+                        _loc.getWorld(),
+                        _loc.getBlockX(),
+                        _loc.getBlockY(),
+                        _loc.getBlockZ(),
+                        maze.mat,
+                        false
+                );
             }
 
             for (int y = 0; y < cell.getHeight() + 2; y++) {
@@ -74,7 +96,14 @@ public class MazeBuilder implements Runnable {
                     continue;
 
                 Location _loc = loc.clone().add(y, z, cell.getWidth() + 1);
-                _loc.getBlock().setType(maze.mat, false);
+                NMSWorld.setBlockInNativeWorld(
+                        _loc.getWorld(),
+                        _loc.getBlockX(),
+                        _loc.getBlockY(),
+                        _loc.getBlockZ(),
+                        maze.mat,
+                        false
+                );
             }
         }
     }
