@@ -33,13 +33,13 @@ public class MazeGenerator {
         cells[pos.getY()][pos.getX()].setVisited(true);
 
         while (true) {
-            CellPos[] unvisited = getUnvisited(pos);
+            List<CellPos> unvisited = getUnvisited(pos);
 
-            if (unvisited.length < 1)
+            if (unvisited.size() < 1)
                 break;
 
-            int random = ThreadLocalRandom.current().nextInt(0, unvisited.length);
-            CellPos selected = unvisited[random];
+            int random = ThreadLocalRandom.current().nextInt(0, unvisited.size());
+            CellPos selected = unvisited.get(random);
             CellPos diff = pos.subtract(selected);
 
             if (diff.getX() < 0) {
@@ -62,7 +62,7 @@ public class MazeGenerator {
         }
     }
 
-    private CellPos[] getUnvisited(CellPos pos) {
+    private List<CellPos> getUnvisited(CellPos pos) {
         List<CellPos> unvisited = new ArrayList<>();
 
         int x = pos.getX(); int y = pos.getY();
@@ -76,7 +76,7 @@ public class MazeGenerator {
         if ((y + 1) < cells.length && !cells[y + 1][x].isVisited())
             unvisited.add(new CellPos(x, y + 1));
 
-        return unvisited.toArray(new CellPos[0]);
+        return unvisited;
     }
 
     public Cell[][] getCells() {
